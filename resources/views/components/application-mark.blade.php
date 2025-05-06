@@ -1,0 +1,1 @@
+<h1 class="text-4xl font-bold text-center text-blue-600" style="margin-left: 6cm;">Lote</h1>
