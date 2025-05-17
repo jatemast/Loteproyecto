@@ -32,4 +32,12 @@ class LaborTaskController extends Controller
 
         return redirect()->route('labor_tasks.index');
     }
+
+    public function destroy(LaborTask $task)
+{
+    $task->delete();
+
+    return redirect()->route('labor_tasks.index')->with('success', 'Labor eliminada correctamente.');
+}
+
 }

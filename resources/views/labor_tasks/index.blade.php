@@ -1,9 +1,12 @@
+
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __(' Manos de obras  y costos registradas') }}
         </h2>
     </x-slot>
+        <x-sidebar />
+
 <body class="bg-gray-50">
     <div class="min-h-screen flex flex-col">
         <!-- Encabezado -->
@@ -39,10 +42,28 @@
                     </div>
                 @endif
 
+                <!-- Barra de búsqueda -->
+                <div class="mb-4">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <input
+                            type="text"
+                            id="searchInput"
+                            class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            placeholder="Buscar por clasificación, item, descripción..."
+                            autocomplete="off"
+                        >
+                    </div>
+                </div>
+
                 <!-- Tabla de labores -->
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
+                        <table class="min-w-full divide-y divide-gray-200" id="laborTable">
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -121,7 +142,12 @@
                                         </td>
                                     </tr>
                                 @empty
-                                    <tr>
+                                    <tr id="noResultsRow" class="hidden">
+                                        <td colspan="9" class="px-6 py-10 text-center text-gray-500">
+                                            No se encontraron resultados para la búsqueda.
+                                        </td>
+                                    </tr>
+                                    <tr id="emptyDataRow" class="{{ $tasks->count() ? 'hidden' : '' }}">
                                         <td colspan="9" class="px-6 py-10 text-center text-gray-500">
                                             No hay labores registradas.
                                             <div class="mt-2">
@@ -155,5 +181,50 @@
             </div>
         </footer>
     </div>
+
+    <!-- Script para la búsqueda dinámica -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const table = document.getElementById('laborTable');
+            const rows = table.querySelectorAll('tbody tr:not(#noResultsRow):not(#emptyDataRow)');
+            const noResultsRow = document.getElementById('noResultsRow');
+            
+            // Función para filtrar las filas de la tabla
+            function filterTable() {
+                const searchTerm = searchInput.value.trim().toLowerCase();
+                let visibleCount = 0;
+                
+                rows.forEach(row => {
+                    // Obtener el texto de las celdas relevantes (excluimos la columna de acciones)
+                    const cells = Array.from(row.querySelectorAll('td:not(:last-child)'));
+                    const text = cells.map(cell => cell.textContent.trim().toLowerCase()).join(' ');
+                    
+                    // Mostrar u ocultar la fila según si contiene el término de búsqueda
+                    if (text.includes(searchTerm)) {
+                        row.classList.remove('hidden');
+                        visibleCount++;
+                    } else {
+                        row.classList.add('hidden');
+                    }
+                });
+                
+                // Mostrar el mensaje de "No se encontraron resultados" si no hay coincidencias
+                if (visibleCount === 0 && searchTerm !== '') {
+                    noResultsRow.classList.remove('hidden');
+                } else {
+                    noResultsRow.classList.add('hidden');
+                }
+            }
+            
+            // Agregar evento de entrada al campo de búsqueda
+            searchInput.addEventListener('input', filterTable);
+            
+            // También filtrar al cargar la página si hay un valor inicial
+            if (searchInput.value) {
+                filterTable();
+            }
+        });
+    </script>
 </body>
 </x-app-layout>

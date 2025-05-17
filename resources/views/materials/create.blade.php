@@ -14,6 +14,7 @@
                     Volver
                 </a>
             </div>
+                <x-sidebar />
 
             <form method="POST" action="{{ route('materials.store') }}">
                 @csrf

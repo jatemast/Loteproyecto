@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ReporteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\RolePermissionController;
@@ -50,6 +51,7 @@ Route::delete('delete-role/{roleId}', [RolePermissionController::class, 'deleteR
 Route::post('role_permission/assignRoleToUser/{userId}', [RolePermissionController::class, 'assignRoleToUser'])->name('role_permission.assignRoleToUser');
 Route::delete('remove-role-from-user/{userId}', [RolePermissionController::class, 'removeRoleFromUser'])->name('role_permission.removeRoleFromUser');
 Route::put('role_permission/updateUserRole/{userId}', [RolePermissionController::class, 'updateUserRole'])->name('role_permission.updateUserRole');
+Route::put('/role_permission/updateUserRole/{userId}', [RolePermissionController::class, 'updateUserRole'])->name('role_permission.updateUserRole');
 
 
     //Material y mano de obra 
@@ -70,3 +72,6 @@ Route::get('labor_tasks/{laborTask}', [LaborTaskController::class, 'show'])->nam
 Route::get('labor_tasks/{laborTask}/edit', [LaborTaskController::class, 'edit'])->name('labor_tasks.edit');
 Route::put('labor_tasks/{laborTask}', [LaborTaskController::class, 'update'])->name('labor_tasks.update');
 Route::delete('labor_tasks/{laborTask}', [LaborTaskController::class, 'destroy'])->name('labor_tasks.destroy');
+
+
+Route::get('/reporte',[ReporteController::class,'index'])->name('reporte.index');

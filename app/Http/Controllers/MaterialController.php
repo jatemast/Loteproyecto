@@ -29,4 +29,31 @@ class MaterialController extends Controller
 
         return redirect()->route('materials.index');
     }
+
+    public function destroy(Material $material)
+{
+    $material->delete();
+    return redirect()->route('materials.index')->with('success', 'Material eliminado correctamente');
+}
+
+    public function edit(Material $material) {
+        return view('materials.edit', compact('material'));
+    }
+
+    public function update(Request $request, Material $material) {
+        $data = $request->validate([
+            'cod_cens' => 'required|string',
+            'descripcion' => 'required|string',
+            'unidad' => 'required|string',
+            'precio_unitario' => 'required|numeric',
+            'cantidad' => 'nullable|integer',
+        ]);
+        $data['valor'] = ($data['cantidad'] ?? 0) * $data['precio_unitario'];
+        $material->update($data);
+
+        return redirect()->route('materials.index')->with('success', 'Material actualizado correctamente');
+    }
+
+  
+
 }

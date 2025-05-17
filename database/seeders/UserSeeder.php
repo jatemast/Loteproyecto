@@ -19,14 +19,14 @@ class UserSeeder extends Seeder
             'email' => 'min@gmail.comad',
             'password' => Hash::make('1002194617'),  
         ]);
-        $user1->assignRole('admin');
+        $user1->assignRole('ADMIN');
 
         $user2 = User::create([
-            'name' => 'Usuario Asistente',
+            'name' => 'COORDINADOR',
             'email' => 'asistente@gmail.com',
             'password' => Hash::make('1002194617'),  
         ]);
-        $user2->assignRole('asistente');
+        $user2->assignRole('COORDINADOR');
     }
     
 }

@@ -56,4 +56,20 @@ class RolePermissionController extends Controller
  
          return redirect()->route('role_permission.index')->with('success', 'Role removed from user successfully!');
      }
+
+ public function updateUserRole(Request $request, $userId)
+{
+    $request->validate([
+        'role' => 'required|exists:roles,name'
+    ]);
+
+    $user = User::findOrFail($userId);
+
+    // Usamos directamente el nombre del rol enviado desde el select
+    $user->syncRoles([$request->role]);
+
+    return redirect()->route('role_permission.index')->with('success', 'Rol actualizado correctamente.');
+}
+
+
 }

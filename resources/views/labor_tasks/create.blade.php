@@ -11,6 +11,7 @@
                 <h1 class="text-2xl font-bold text-gray-800 mb-2">Administración de Labor y Costos</h1>
                 <p class="text-gray-500">Complete el formulario para registrar una nueva labor</p>
             </div>
+                <x-sidebar />
 
             <form method="POST" action="{{ route('labor_tasks.store') }}" class="space-y-6">
                 @csrf
